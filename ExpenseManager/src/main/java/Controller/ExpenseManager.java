@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,56 +21,60 @@ import Model.ExpenseDAO;
 import Model.ExpenseDTO;
 import Model.ServiceClass;
 
-@WebServlet(urlPatterns = {"/expenseManager1" ,"/addIncome" ,"/addExpense","/homePage","/transactionShow"})
+@WebServlet(urlPatterns = {"/expenseManager" ,"/addIncome" ,"/addExpense","/homePage","/transactionShow" ,"/compare" })
 public class ExpenseManager extends HttpServlet {
 	 private static ExpenseDAO expenseDAO=new ExpenseDAO();
-	 
+		static ArrayList<ExpenseDTO> data=null;
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path=req.getServletPath();
 		String exp=req.getParameter("expenseManager");
 		
 	
+		String compareValueString=req.getParameter("compare");
 			switch(path) {
 			case "/transactionShow":
 				showTransaction(req,resp);
 				displayData(req, resp);
 				break;
 			case "/addIncome":
-				addIncome(req, resp);
 				displayData(req, resp);
-				PrintWriter pw =resp.getWriter();
-				pw.print("<div align=center>data inserted successfully</div>");
-				RequestDispatcher rd=req.getRequestDispatcher("expense.jsp");
-				rd.include(req, resp);
+				addIncome(req, resp);
 				
+//				PrintWriter pw =resp.getWriter();
+//				RequestDispatcher rd=req.getRequestDispatcher("AddIncome.jsp");
+//				pw.print("<div align=center>data inserted successfully</div>");
+//				rd.include(req, resp);
+//				
 				break;
 			case "/addExpense":
-				addExpensee(req, resp);
 				displayData(req, resp);
-				rd=req.getRequestDispatcher("expense.jsp");
-			    pw =resp.getWriter();
-				pw.print("<div align=center>data inserted successfully</div>");
-				rd.include(req,resp);
+				addExpensee(req, resp);
+				
+//				rd=req.getRequestDispatcher("expense.jsp");
+//			    pw =resp.getWriter();
+//				pw.print("<div align=center>data inserted successfully</div>");
+//				rd.include(req,resp);
 				break;
 			case "/homePage":
 				displayData(req,resp);
 				break;
-//			case "/transaction":
-//				showTransaction(req,resp);
-//				break;
+			case "/transaction":
+				showTransaction(req,resp);
+				break;
+			case "/compare":
+				Collections.sort(data);
+				showTransaction(req, resp);
+				break;
 			
 		}
-		
-	
-	
 	}
 
 	private void showTransaction(HttpServletRequest req, HttpServletResponse resp) {
 		try {
 			PrintWriter pw=resp.getWriter();
 			try {
-				ArrayList<ExpenseDTO> data=expenseDAO.showTransactions();
+			data=expenseDAO.showTransactions();
 				req.setAttribute("AllData", data);
 				RequestDispatcher rd=req.getRequestDispatcher("ShowTransactions.jsp");
 				rd.forward(req, resp);
@@ -140,7 +146,31 @@ public class ExpenseManager extends HttpServlet {
 		e1.setDate(expenseDate);
 		e1.setTime(expenseTIme);
 		
-		expenseDAO.addExpense(e1);
+		int count=expenseDAO.addExpense(e1);
+		System.out.println(count+" coount this");
+		
+//		RequestDispatcher rd=req.getRequestDispatcher("addIncome.html");
+//		PrintWriter pw=resp.getWriter();
+//		pw.print("<h1 align='center'>Income details added successfully</h1>");
+//		rd.include(req, resp);
+		
+		if (count>=0) {
+			PrintWriter pw;
+			try {
+				RequestDispatcher rd=req.getRequestDispatcher("AddIncome.jsp");
+				pw = resp.getWriter();
+				
+				pw.print("<div align=center>data inserted successfully</div>");
+				rd.include(req, resp);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 
 	private void addIncome(HttpServletRequest req, HttpServletResponse resp) {
@@ -163,6 +193,22 @@ public class ExpenseManager extends HttpServlet {
 		dto.setDate(incomeDate);
 		dto.setTime(incomeTime);
 		
-		expenseDAO.addIncome(dto);
+		int count=expenseDAO.addIncome(dto);
+		
+		if (count>=0) {
+		
+			try {
+				RequestDispatcher rd=req.getRequestDispatcher("expense.jsp");
+			    PrintWriter pw =resp.getWriter();
+				pw.print("<div align=center>data inserted successfully</div>");
+				rd.include(req,resp);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

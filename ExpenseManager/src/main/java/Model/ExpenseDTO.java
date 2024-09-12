@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class ExpenseDTO {
+public class ExpenseDTO implements Comparable<ExpenseDTO>{
 	private int id;
 	private double income;
 	private double expense;
@@ -19,6 +19,25 @@ public class ExpenseDTO {
 	
 	private String startPoint;
 	private String endpoint;
+//	@Override
+//	public int compareTo(Employee e1) {
+//		if(empSalary==e1.getEmpSalary()) {
+//			return 0;
+//		}else if(empSalary>e1.getEmpSalary()) {
+//			return 1;
+//		}else
+//			return -1;
+//	}
+	
+	public int compareTo(ExpenseDTO e) {
+		if (income==e.getIncome()) {
+				return 0;
+		}else if (income>e.getIncome()) {
+				return 1;
+		}else {
+				return -1;
+			}
+		}
 	
 	
 	

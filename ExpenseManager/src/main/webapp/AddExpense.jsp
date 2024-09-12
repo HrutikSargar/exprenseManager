@@ -8,6 +8,9 @@
 <style type="text/css">
 #div-1{
 	width:400px;
+	 backdrop-filter: blur(200px);
+  filter: blur();
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.25);
 }
 h2{
 	color:"blue";
@@ -74,7 +77,10 @@ h2{
 		<input type="time"  class="form-control" name="time" id="">
 	</div> <!-- form-group end.// -->
 	<div class="form-group">
-        <button type="submit" class="btn btn-primary btn-block"> Add Expense  </button>
+        <button type="submit" class="btn btn-danger btn-block" > Add Expense  </button>
+    </div>
+     <div class="form-group">
+        <button  class="btn btn-secondary"> <a style="text-decoration:none; color:white"  href="expense.jsp">Home Page</a></button>
     </div>
 </form>
 </article> <!-- card-body end .// -->

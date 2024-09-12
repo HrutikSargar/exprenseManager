@@ -17,7 +17,7 @@ public class ExpenseDAO {
 	private static String addExpense="insert into expense values(?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static String displayData="SELECT total_income, total_expense, balance FROM expense WHERE payment_date BETWEEN ? AND ? ORDER BY id DESC LIMIT 1";
-	
+//	private static String displayData="SELECT MAX(total_income), MAX(total_expense), MAX(balance )FROM expense WHERE payment_date BETWEEN ? AND ? ORDER BY id DESC LIMIT 1";
 	 private static  String showAllTransactions="select * from expense";
 	
 	//this variables will hold latest total_income and balance
@@ -35,16 +35,14 @@ public class ExpenseDAO {
 				totalIncomeLatest=rs.getDouble(1);
 				balance=rs.getDouble(2);
 				totalExpense=rs.getDouble(3);
-				
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public void addIncome(ExpenseDTO dto) {
+	public int addIncome(ExpenseDTO dto) {
 		fetchTotalIncomeAndBalance();
 		PreparedStatement pstmt;
 		try {
@@ -65,12 +63,15 @@ public class ExpenseDAO {
 			
 			int count=pstmt.executeUpdate();
 			
+			return count;
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return -1;
 	}
-	public void addExpense(ExpenseDTO e1) {
+	public int addExpense(ExpenseDTO e1) {
 		fetchTotalIncomeAndBalance();
 		PreparedStatement pstmt;
 		try {
@@ -84,15 +85,17 @@ public class ExpenseDAO {
 			pstmt.setString(7, e1.getDate());
 			pstmt.setString(8, e1.getTime());
 			pstmt.setDouble(9, e1.getIncome()+totalIncomeLatest);	
-			pstmt.setDouble(10, totalExpense+e1.getExpense());
+			pstmt.setDouble(10,+e1.getExpense()+totalExpense);
 			
 			pstmt.setDouble(11, totalIncomeLatest-(totalExpense+e1.getExpense()));
 			
 			int count=pstmt.executeUpdate();
+			return count;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return -1;
 	}
 
 	public ExpenseDTO displayData(ExpenseDTO dto) {

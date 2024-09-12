@@ -8,6 +8,9 @@
 <style type="text/css">
 #div-1{
 	width:400px;
+	 backdrop-filter: blur(200px);
+  filter: blur();
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.25);
 }
 h2{
 	color:"blue";

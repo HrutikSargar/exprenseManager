@@ -19,6 +19,12 @@
             <option value>Asc Date</option>
             <option value>Desc Date</option>
  </select>
+ <form action="compare" method="post">
+ <!-- <a href="ascDate" value="Asc Date">Ascending by Income</a>  -->
+  <input type="submit" name="ascDate" value="Ascending by Income"> 
+ </form>
+
+ 
 <div id="div1" style="width:400px; align:center;margin-left:20px " >
 <% Object data=request.getAttribute("AllData");
 	 ArrayList<ExpenseDTO> allData = (ArrayList<ExpenseDTO>) data;%>
